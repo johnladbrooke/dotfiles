@@ -1,0 +1,11 @@
+xterm*faceName: JetBrainsMono\ Nerd\ Font:size=12
+xterm.termName: xterm-256color
+xterm.vt100.saveLines: 8192
+xterm*Background: black
+xterm*Foreground: grey
+xterm*selectToClipboard: true
+xterm*VT100.Translations: #override \
+      Shift <KeyPress> Insert: insert-selection(CLIPBOARD) \n\
+      Ctrl Shift <Key>V:    insert-selection(CLIPBOARD) \n\
+      Ctrl Shift <Key>C:    copy-selection(CLIPBOARD) \n\
+      Ctrl <Btn1Up>: exec-formatted("xdg-open '%t'", PRIMARY)
