@@ -1,5 +1,6 @@
 # dotfiles
 
+run to install 
 ```
-stow i3 nvim tmux xresources zsh p10k ohmyzsh
+stow i3 nvim tmux xresources zsh
 ```
