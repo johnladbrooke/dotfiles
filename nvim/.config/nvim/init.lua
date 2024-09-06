@@ -100,7 +100,7 @@ vim.opt.termguicolors = true
 vim.g.have_nerd_font = true
 
 -- Turn off swapfile
-vim.opt.swapfile = false
+vim.opt.swapfile = true
 
 -- [[ Setting options ]]
 -- See `:help vim.opt`
@@ -161,8 +161,7 @@ vim.opt.inccommand = "split"
 vim.opt.cursorline = true
 
 -- Minimal number of screen lines to keep above and below the cursor.
-vim.opt.scrolloff = 10
-
+vim.opt.scrolloff = 20
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
@@ -174,6 +173,13 @@ vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, { desc = "Go to previous [D]
 vim.keymap.set("n", "]d", vim.diagnostic.goto_next, { desc = "Go to next [D]iagnostic message" })
 vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, { desc = "Show diagnostic [E]rror messages" })
 vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostic [Q]uickfix list" })
+
+-- Paste without replacing the register with what you paste over
+vim.keymap.set("x", "<leader>p", '"_dp', { desc = "Paste keeping register" })
+
+-- Quicklist navigation
+vim.keymap.set("n", "<C-j>", vim.cmd.cnext, { desc = "Go to next quick list item" })
+vim.keymap.set("n", "<C-k>", vim.cmd.cprevious, { desc = "Go to last quick list item" })
 
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
@@ -193,10 +199,10 @@ vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" }
 --  Use CTRL+<hjkl> to switch between windows
 --
 --  See `:help wincmd` for a list of all window commands
-vim.keymap.set("n", "<C-h>", "<C-w><C-h>", { desc = "Move focus to the left window" })
-vim.keymap.set("n", "<C-l>", "<C-w><C-l>", { desc = "Move focus to the right window" })
-vim.keymap.set("n", "<C-j>", "<C-w><C-j>", { desc = "Move focus to the lower window" })
-vim.keymap.set("n", "<C-k>", "<C-w><C-k>", { desc = "Move focus to the upper window" })
+-- vim.keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left window' })
+-- vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
+-- vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
+-- vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
@@ -393,16 +399,17 @@ require("lazy").setup({
 			vim.keymap.set("n", "<leader>sk", builtin.keymaps, { desc = "[S]earch [K]eymaps" })
 			vim.keymap.set("n", "<leader>s.", function()
 				builtin.find_files({ hidden = true, no_ignore = true })
-			end, { desc = "[S]earch [.] hidden and gitignore" })
+			end, { desc = "[S]earch . Hidden files and gitignore" })
 			vim.keymap.set("n", "<leader>sf", function()
 				builtin.find_files({ hidden = true })
 			end, { desc = "[S]earch [F]iles" })
 			vim.keymap.set("n", "<leader>ss", builtin.builtin, { desc = "[S]earch [S]elect Telescope" })
 			vim.keymap.set("n", "<leader>sw", builtin.grep_string, { desc = "[S]earch current [W]ord" })
 			vim.keymap.set("n", "<leader>sg", builtin.live_grep, { desc = "[S]earch by [G]rep" })
+			vim.keymap.set("n", "<leader>sgf", builtin.git_files, { desc = "[S]earch by [G]it [F]iles" })
 			vim.keymap.set("n", "<leader>sd", builtin.diagnostics, { desc = "[S]earch [D]iagnostics" })
 			vim.keymap.set("n", "<leader>sr", builtin.resume, { desc = "[S]earch [R]esume" })
-			vim.keymap.set("n", "<leader>s,", builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
+			vim.keymap.set("n", "<leader>s,", builtin.oldfiles, { desc = '[S]earch Recent Files ("," for repeat)' })
 			vim.keymap.set("n", "<leader><leader>", builtin.buffers, { desc = "[ ] Find existing buffers" })
 
 			-- Slightly advanced example of overriding default behavior and theme
@@ -659,14 +666,14 @@ require("lazy").setup({
 			{
 				"<leader>f",
 				function()
-					require("conform").format({ async = true, lsp_fallback = true })
+					require("conform").format({ async = false, lsp_fallback = true })
 				end,
 				mode = "",
 				desc = "[F]ormat buffer",
 			},
 		},
 		opts = {
-			notify_on_error = false,
+			notify_on_error = true,
 			format_on_save = function(bufnr)
 				-- Disable "format_on_save lsp_fallback" for languages that don't
 				-- have a well standardized coding style. You can add additional
@@ -678,17 +685,18 @@ require("lazy").setup({
 				}
 			end,
 			formatters_by_ft = {
+
 				lua = { "stylua" },
-				javascript = { { "prettierd", "prettier" } },
-				typescript = { { "prettierd", "prettier" } },
-				javascriptreact = { { "prettierd", "prettier" } },
-				typescriptreact = { { "prettierd", "prettier" } },
-				css = { "prettier" },
-				html = { "prettier" },
-				json = { "prettier" },
-				yaml = { "prettier" },
-				markdown = { "prettier" },
-				graphql = { "prettier" },
+				javascript = { "prettierd" },
+				typescript = { "prettierd" },
+				javascriptreact = { "prettierd" },
+				typescriptreact = { "prettierd" },
+				css = { "prettierd" },
+				html = { "prettierd" },
+				json = { "prettierd" },
+				yaml = { "prettierd" },
+				markdown = { "prettierd" },
+				graphql = { "prettierd" },
 				-- Conform can also run multiple formatters sequentially
 				-- python = { "isort", "black" },
 				--
@@ -810,6 +818,22 @@ require("lazy").setup({
 		end,
 	},
 
+	-- {
+	--   'neanias/everforest-nvim',
+	--   version = false,
+	--   lazy = false,
+	--   priority = 1000, -- make sure to load this before all the other start plugins
+	--   -- Optional; default configuration will be used if setup isn't called.
+	--   config = function()
+	--     require('everforest').setup {
+	--       -- Your config here
+	--       transparent_background_level = 2,
+	--     }
+	--   end,
+	--   init = function()
+	--     vim.cmd [[colorscheme everforest]]
+	--   end,
+	-- },
 	{
 		"rose-pine/neovim",
 		name = "rose-pine",
@@ -821,7 +845,7 @@ require("lazy").setup({
 			})
 		end,
 		init = function()
-			vim.cmd([[colorscheme rose-pine-main]])
+			vim.cmd([[colorscheme rose-pine]])
 		end,
 	},
 
