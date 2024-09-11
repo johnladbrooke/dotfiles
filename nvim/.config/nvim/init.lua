@@ -100,7 +100,7 @@ vim.opt.termguicolors = true
 vim.g.have_nerd_font = true
 
 -- Turn off swapfile
-vim.opt.swapfile = true
+vim.opt.swapfile = false
 
 -- [[ Setting options ]]
 -- See `:help vim.opt`
@@ -190,10 +190,10 @@ vim.keymap.set("n", "<C-k>", vim.cmd.cprevious, { desc = "Go to last quick list 
 vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
 
 -- TIP: Disable arrow keys in normal mode
--- vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')
--- vim.keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
--- vim.keymap.set('n', '<up>', '<cmd>echo "Use k to move!!"<CR>')
--- vim.keymap.set('n', '<down>', '<cmd>echo "Use j to move!!"<CR>')
+vim.keymap.set({ "n", "v", "i" }, "<left>", '<cmd>echo "Use h to move!!"<CR>')
+vim.keymap.set({ "n", "v", "i" }, "<right>", '<cmd>echo "Use l to move!!"<CR>')
+vim.keymap.set({ "n", "v", "i" }, "<up>", '<cmd>echo "Use k to move!!"<CR>')
+vim.keymap.set({ "n", "v", "i" }, "<down>", '<cmd>echo "Use j to move!!"<CR>')
 
 -- Keybinds to make split navigation easier.
 --  Use CTRL+<hjkl> to switch between windows
@@ -608,10 +608,7 @@ require("lazy").setup({
 				-- Some languages (like typescript) have entire language plugins that can be useful:
 				--    https://github.com/pmizio/typescript-tools.nvim
 				--
-				-- But for many setups, the LSP (`tsserver`) will work just fine
-				tsserver = {},
-				--
-
+				ts_ls = {},
 				lua_ls = {
 					-- cmd = {...},
 					-- filetypes = { ...},
@@ -687,16 +684,16 @@ require("lazy").setup({
 			formatters_by_ft = {
 
 				lua = { "stylua" },
-				javascript = { "prettierd" },
-				typescript = { "prettierd" },
-				javascriptreact = { "prettierd" },
-				typescriptreact = { "prettierd" },
-				css = { "prettierd" },
-				html = { "prettierd" },
-				json = { "prettierd" },
-				yaml = { "prettierd" },
-				markdown = { "prettierd" },
-				graphql = { "prettierd" },
+				javascript = { "prettier" },
+				typescript = { "prettier" },
+				javascriptreact = { "prettier" },
+				typescriptreact = { "prettier" },
+				css = { "prettier" },
+				html = { "prettier" },
+				json = { "prettier" },
+				yaml = { "prettier" },
+				markdown = { "prettier" },
+				graphql = { "prettier" },
 				-- Conform can also run multiple formatters sequentially
 				-- python = { "isort", "black" },
 				--
@@ -817,23 +814,6 @@ require("lazy").setup({
 			})
 		end,
 	},
-
-	-- {
-	--   'neanias/everforest-nvim',
-	--   version = false,
-	--   lazy = false,
-	--   priority = 1000, -- make sure to load this before all the other start plugins
-	--   -- Optional; default configuration will be used if setup isn't called.
-	--   config = function()
-	--     require('everforest').setup {
-	--       -- Your config here
-	--       transparent_background_level = 2,
-	--     }
-	--   end,
-	--   init = function()
-	--     vim.cmd [[colorscheme everforest]]
-	--   end,
-	-- },
 	{
 		"rose-pine/neovim",
 		name = "rose-pine",
