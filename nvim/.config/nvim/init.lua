@@ -195,6 +195,10 @@ vim.keymap.set({ "n", "v", "i" }, "<right>", '<cmd>echo "Use l to move!!"<CR>')
 vim.keymap.set({ "n", "v", "i" }, "<up>", '<cmd>echo "Use k to move!!"<CR>')
 vim.keymap.set({ "n", "v", "i" }, "<down>", '<cmd>echo "Use j to move!!"<CR>')
 
+vim.keymap.set({ "n", "v", "i" }, "<S-left>", "<Nop>")
+vim.keymap.set({ "n", "v", "i" }, "<S-right>", "<Nop>")
+vim.keymap.set({ "n", "v", "i" }, "<S-up>", "<Nop>")
+vim.keymap.set({ "n", "v", "i" }, "<S-down>", "<Nop>")
 -- Keybinds to make split navigation easier.
 --  Use CTRL+<hjkl> to switch between windows
 --
