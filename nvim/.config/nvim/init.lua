@@ -410,7 +410,7 @@ require("lazy").setup({
 			vim.keymap.set("n", "<leader>ss", builtin.builtin, { desc = "[S]earch [S]elect Telescope" })
 			vim.keymap.set("n", "<leader>sw", builtin.grep_string, { desc = "[S]earch current [W]ord" })
 			vim.keymap.set("n", "<leader>sg", builtin.live_grep, { desc = "[S]earch by [G]rep" })
-			vim.keymap.set("n", "<leader>sgf", builtin.git_files, { desc = "[S]earch by [G]it [F]iles" })
+			-- vim.keymap.set("n", "<leader>sgf", builtin.git_files, { desc = "[S]earch by [G]it [F]iles" })
 			vim.keymap.set("n", "<leader>sd", builtin.diagnostics, { desc = "[S]earch [D]iagnostics" })
 			vim.keymap.set("n", "<leader>sr", builtin.resume, { desc = "[S]earch [R]esume" })
 			vim.keymap.set("n", "<leader>s,", builtin.oldfiles, { desc = '[S]earch Recent Files ("," for repeat)' })
@@ -602,6 +602,10 @@ require("lazy").setup({
 			--  - capabilities (table): Override fields in capabilities. Can be used to disable certain LSP features.
 			--  - settings (table): Override the default settings passed when initializing the server.
 			--        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
+
+			local mason_registry = require("mason-registry")
+			local vue_language_server_path = mason_registry.get_package("vue-language-server"):get_install_path()
+				.. "/node_modules/@vue/language-server"
 			local servers = {
 				-- clangd = {},
 				-- gopls = {},
@@ -612,7 +616,18 @@ require("lazy").setup({
 				-- Some languages (like typescript) have entire language plugins that can be useful:
 				--    https://github.com/pmizio/typescript-tools.nvim
 				--
-				ts_ls = {},
+				ts_ls = {
+					init_options = {
+						plugins = {
+							{
+								name = "@vue/typescript-plugin",
+								location = vue_language_server_path,
+								languages = { "vue" },
+							},
+						},
+					},
+					filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" },
+				},
 				lua_ls = {
 					-- cmd = {...},
 					-- filetypes = { ...},
@@ -697,8 +712,9 @@ require("lazy").setup({
 				yaml = { "prettierd" },
 				markdown = { "prettierd" },
 				graphql = { "prettierd" },
+				vue = { "prettierd" },
 				-- Conform can also run multiple formatters sequentially
-				-- python = { "isort", "black" },
+				python = { "ruff" },
 				--
 				-- You can use a sub-list to tell conform to run *until* a formatter
 				-- is found.
@@ -822,7 +838,9 @@ require("lazy").setup({
 		name = "rose-pine",
 		config = function()
 			require("rose-pine").setup({
+				variant = "main",
 				styles = {
+					transparency = false,
 					italic = false,
 				},
 			})
@@ -875,6 +893,169 @@ require("lazy").setup({
 
 			-- ... and there is more!
 			--  Check out: https://github.com/echasnovski/mini.nvim
+		end,
+	},
+	{
+		"mattkubej/jest.nvim",
+		config = function()
+			require("nvim-jest").setup({
+				-- Jest executable
+				-- By default finds jest in the relative project directory
+				-- To override with an npm script, provide 'npm test --' or similar
+				jest_cmd = vim.fn.findfile("node_modules/.bin/jest", ".;"),
+
+				-- Prevents tests from printing messages
+				silent = false,
+			})
+		end,
+		--Command	Description
+		--:Jest 	Run Jest on entire project
+		--:JestFile 	Run Jest on file in current buffer
+		--:JestSingle 	Run Jest on test name under cursor
+		--:JestCoverage 	Run Jest on entire project with coverage
+	},
+	-- {
+	-- 	"zbirenbaum/copilot.lua",
+	-- 	cmd = "Copilot",
+	-- 	event = "InsertEnter",
+	-- 	config = function()
+	-- 		require("copilot").setup({
+	-- 			panel = {
+	-- 				enabled = true,
+	-- 				auto_refresh = false,
+	-- 				keymap = {
+	-- 					jump_prev = "[[",
+	-- 					jump_next = "]]",
+	-- 					accept = "<CR>",
+	-- 					refresh = "gr",
+	-- 					open = "<M-CR>",
+	-- 				},
+	-- 				layout = {
+	-- 					position = "bottom", -- | top | left | right
+	-- 					ratio = 0.4,
+	-- 				},
+	-- 			},
+	-- 			suggestion = {
+	-- 				enabled = true,
+	-- 				auto_trigger = true,
+	-- 				hide_during_completion = true,
+	-- 				debounce = 75,
+	-- 				keymap = {
+	-- 					accept = "¬",
+	-- 					accept_word = false,
+	-- 					accept_line = false,
+	-- 					next = "‘",
+	-- 					prev = "“",
+	-- 					dismiss = "<C-]>",
+	-- 				},
+	-- 			},
+	-- 			filetypes = {
+	-- 				yaml = false,
+	-- 				markdown = false,
+	-- 				help = false,
+	-- 				gitcommit = false,
+	-- 				gitrebase = false,
+	-- 				hgcommit = false,
+	-- 				svn = false,
+	-- 				cvs = false,
+	-- 				["."] = false,
+	-- 			},
+	-- 			copilot_node_command = "node", -- Node.js version must be > 18.x
+	-- 			server_opts_overrides = {},
+	-- 		})
+	-- 	end,
+	-- },
+	{
+		"CopilotC-Nvim/CopilotChat.nvim",
+		branch = "canary",
+		cmd = "CopilotChat",
+		opts = function()
+			local user = vim.env.USER or "User"
+			user = user:sub(1, 1):upper() .. user:sub(2)
+			return {
+				auto_insert_mode = true,
+				show_help = true,
+				question_header = "  " .. user .. " ",
+				answer_header = "  Copilot ",
+				window = {
+					width = 0.4,
+				},
+				selection = function(source)
+					local select = require("CopilotChat.select")
+					return select.visual(source) or select.buffer(source)
+				end,
+			}
+		end,
+		keys = {
+			{ "<c-s>", "<CR>", ft = "copilot-chat", desc = "Submit Prompt", remap = true },
+			{ "<leader>a", "", desc = "+ai", mode = { "n", "v" } },
+			{
+				"<leader>aa",
+				function()
+					return require("CopilotChat").toggle()
+				end,
+				desc = "Toggle (CopilotChat)",
+				mode = { "n", "v" },
+			},
+			{
+				"<leader>ax",
+				function()
+					return require("CopilotChat").reset()
+				end,
+				desc = "Clear (CopilotChat)",
+				mode = { "n", "v" },
+			},
+			{
+				"<leader>aq",
+				function()
+					local input = vim.fn.input("Quick Chat: ")
+					if input ~= "" then
+						require("CopilotChat").ask(input)
+					end
+				end,
+				desc = "Quick Chat (CopilotChat)",
+				mode = { "n", "v" },
+			},
+			{
+				"<leader>ae",
+				"<cmd>CopilotChatExplain<cr>",
+				desc = "Explain (CopilotChat)",
+				mode = { "n", "v" },
+			},
+			{ "<leader>at", "<cmd>CopilotChatTests<cr>", desc = "CopilotChat - Generate tests", mode = { "n", "v" } },
+			{ "<leader>ar", "<cmd>CopilotChatReview<cr>", desc = "CopilotChat - Review code", mode = { "n", "v" } },
+			{ "<leader>aR", "<cmd>CopilotChatRefactor<cr>", desc = "CopilotChat - Refactor code", mode = { "n", "v" } },
+			{
+				"<leader>an",
+				"<cmd>CopilotChatBetterNamings<cr>",
+				desc = "CopilotChat - Better Naming",
+				mode = { "n", "v" },
+			},
+			-- Fix diagnostic help
+			{
+				"<leader>ad",
+				"<cmd>CopilotChatFixDiagnostic<cr>",
+				desc = "Diagnostic Help (CopilotChat)",
+				mode = { "n", "v" },
+			},
+			-- Show prompts actions with telescope
+			-- { "<leader>ap", M.pick("prompt"), desc = "Prompt Actions (CopilotChat)", mode = { "n", "v" } },
+		},
+		config = function(_, opts)
+			local chat = require("CopilotChat")
+			if pcall(require, "cmp") then
+				require("CopilotChat.integrations.cmp").setup()
+			end
+
+			vim.api.nvim_create_autocmd("BufEnter", {
+				pattern = "copilot-chat",
+				callback = function()
+					vim.opt_local.relativenumber = false
+					vim.opt_local.number = false
+				end,
+			})
+
+			chat.setup(opts)
 		end,
 	},
 	{ -- Highlight, edit, and navigate code
