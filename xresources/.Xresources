@@ -1,4 +1,4 @@
-xterm*faceName: JetBrainsMono\ Nerd\ Font:size=12
+xterm*faceName: JetBrainsMono\ Nerd\ Font:size=16
 xterm.termName: xterm-256color
 xterm.vt100.saveLines: 8192
 xterm*Background: black
@@ -9,3 +9,9 @@ xterm*VT100.Translations: #override \
       Ctrl Shift <Key>V:    insert-selection(CLIPBOARD) \n\
       Ctrl Shift <Key>C:    copy-selection(CLIPBOARD) \n\
       Ctrl <Btn1Up>: exec-formatted("xdg-open '%t'", PRIMARY)
+*VT100.scrollbar.translations:  #override \n\
+    <Btn5Down>:     StartScroll(Forward) \n\
+    <Btn1Down>:     StartScroll(Continuous) MoveThumb() NotifyThumb() \n\
+    <Btn4Down>:     StartScroll(Backward) \n\
+    <Btn1Motion>:   MoveThumb() NotifyThumb() \n\
+    <BtnUp>:        NotifyScroll(Proportional) EndScroll()
