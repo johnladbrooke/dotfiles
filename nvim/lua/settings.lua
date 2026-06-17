@@ -25,9 +25,21 @@ opt.completeopt = { "menuone", "popup", "noinsert" } -- Options for completion m
 opt.winborder = "rounded" -- Use rounded borders for windows
 opt.hlsearch = false -- Disable highlighting of search results
 opt.clipboard = "unnamedplus" -- Sync clipboard between neovim and OS
+-- menuone: show menu even for 1 match; noselect: do not insert text automatically
+opt.completeopt = { "menu", "menuone", "noselect", "fuzzy" }
+
+-- 2. Configure the built-in completion sources
+-- 'o' instructs Neovim to pull options automatically from the LSP omnifunc
+opt.complete = ".,w,b,o"
+
+-- 3. Enable the modern native automated completion triggers
+opt.autocomplete = true
+opt.autocompletedelay = 200 -- delay in milliseconds before menu pops up
+
 
 vim.cmd.filetype("plugin indent on") -- Enable filetype detection, plugins, and indentation
 
 -- Netrw
 vim.g.netrw_liststyle = 1    -- Use the long listing view
 vim.g.netrw_sort_by = "size" -- Sort files by size
+
