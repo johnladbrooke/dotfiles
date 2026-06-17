@@ -25,6 +25,7 @@ opt.completeopt = { "menuone", "popup", "noinsert" } -- Options for completion m
 opt.winborder = "rounded" -- Use rounded borders for windows
 opt.hlsearch = false -- Disable highlighting of search results
 opt.clipboard = "unnamedplus" -- Sync clipboard between neovim and OS
+opt.autocomplete = true
 -- menuone: show menu even for 1 match; noselect: do not insert text automatically
 opt.completeopt = { "menu", "menuone", "noselect", "fuzzy" }
 
@@ -42,4 +43,3 @@ vim.cmd.filetype("plugin indent on") -- Enable filetype detection, plugins, and 
 -- Netrw
 vim.g.netrw_liststyle = 1    -- Use the long listing view
 vim.g.netrw_sort_by = "size" -- Sort files by size
-

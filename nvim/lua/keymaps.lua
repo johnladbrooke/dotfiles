@@ -28,6 +28,15 @@ keymap("n", "<leader>cd", '<cmd>lua vim.fn.chdir(vim.fn.expand("%:p:h"))<CR>')
 
 local opts = { noremap = true, silent = true }
 keymap("n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", opts) -- Go to definition
+
+keymap("n", "sd", "<cmd>lua vim.diagnostic.open_float()<CR>", opts)
+
+-- ]d jumps to the next diagnostic in the buffer. ]d-default
+-- [d jumps to the previous diagnostic in the buffer. [d-default
+-- ]D jumps to the last diagnostic in the buffer. ]D-default
+-- [D jumps to the first diagnostic in the buffer. [D-default
+
+
 -- - "gra" (Normal and Visual mode) is mapped to |vim.lsp.buf.code_action()|
 -- - "gri" is mapped to |vim.lsp.buf.implementation()|
 -- - "grn" is mapped to |vim.lsp.buf.rename()|
